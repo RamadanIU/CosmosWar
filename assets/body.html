@@ -1,0 +1,315 @@
+</head>
+<body>
+    <div id="game-container">
+        <!-- Top HUD -->
+        <div id="topHUD" class="hidden">
+            <div id="topHUD-left">
+            <div class="topbar">
+                <div class="topbar-stats">
+                    <div class="stat-chip">
+                        <span class="stat-icon" aria-hidden="true">💲</span>
+                        <span id="score" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-chip">
+                        <span class="stat-icon" aria-hidden="true">⟠</span>
+                        <span id="etheriumDisplay" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-chip stat-chip--green">
+                        <span class="stat-value"><span id="playerPlanets">0</span>/<span id="totalPlanets">0</span></span>
+                        <span class="stat-suffix" aria-hidden="true">🌍</span>
+                    </div>
+                </div>
+
+                <div class="topbar-actions" id="topActions">
+                    <button id="buildBattleship" class="ui-btn build-btn" type="button">
+                        <div class="btn-title">🚀 Линкор</div>
+                        <div class="btn-sub" style="color:#fbbf24;">100💲+20⟠</div>
+                    </button>
+
+                    <button id="buildCargoShip" class="ui-btn build-btn" type="button">
+                        <div class="btn-title">📦 Грузовик</div>
+                        <div class="btn-sub" style="color:#fbbf24;">10💲</div>
+                    </button>
+
+                    <button id="diplomacyBtn" class="ui-btn build-btn" type="button">
+                        <div class="btn-title">🤝</div>
+                        <div class="btn-sub">Дипломатия</div>
+                    </button>
+
+                    <button id="inboxBtn" class="ui-btn build-btn" type="button" style="position:relative;">
+                        <div class="btn-title">📨</div>
+                        <div class="btn-sub">Почта</div>
+                        <span id="inboxBadge" class="inbox-badge hidden">0</span>
+                    </button>
+
+                    <button id="upgradeBtn" class="ui-btn build-btn" type="button">
+                        <div class="btn-title">⚡</div>
+                        <div class="btn-sub">Апгрейды</div>
+                    </button>
+                </div>
+            </div>
+            </div>
+            <div id="topHUD-right">
+                <div id="minimap" class="ui-panel">
+                    <canvas id="minimapCanvas" width="130" height="73"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Game Area -->
+        <div id="gameArea">
+            <canvas id="gameCanvas"></canvas>
+        </div>
+        
+        
+        <!-- Upgrade Panel -->
+        <div id="upgradePanel" class="diplo-modal hidden" style="color: white;">
+            <div class="diplo-panel upgrade-panel">
+                <div class="diplo-header">
+                    <span style="font-weight: bold; font-size: 16px;">⚡ Апгрейды</span>
+                    <button class="diplo-close" id="closeUpgrade" type="button">✕</button>
+                </div>
+                <div style="padding: 10px;">
+                    <div class="upgrade-subtitle">Флот</div>
+<div style="display:flex; align-items:center; gap:8px; margin: 6px 0 10px;">
+    <div style="font-size:13px; opacity:0.85;">Для:</div>
+    <select id="upgradeFleetTypeSelect" style="flex: 1; padding: 6px 8px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.18); background: rgba(0,0,0,0.35); color: white; outline: none;">
+        <option value="fighters">Истребители</option>
+        <option value="defenders">Защитники планет</option>
+        <option value="escorts">Эскорты</option>
+        <option value="battleships">Линкоры</option>
+    </select>
+</div>
+    <div class="upgrade-grid">
+                        <button id="upgradeSpeed" class="ui-btn upgrade-btn" type="button">
+                            <div class="btn-title" style="font-size: 18px;">🚀</div>
+                            <div class="btn-sub">Скорость <span class="lvl lvl-blue">Ур.<span id="speedLvl">1</span></span></div>
+                            <div class="btn-sub cost">💰 <span id="speedCost">100</span></div>
+                        </button>
+
+                        <button id="upgradeAttack" class="ui-btn upgrade-btn" type="button">
+                            <div class="btn-title" style="font-size: 18px;">⚔️</div>
+                            <div class="btn-sub">Атака <span class="lvl lvl-red">Ур.<span id="attackLvl">1</span></span></div>
+                            <div class="btn-sub cost">💰 <span id="attackCost">100</span></div>
+                        </button>
+
+                        <button id="upgradeArmor" class="ui-btn upgrade-btn" type="button">
+                            <div class="btn-title" style="font-size: 18px;">🛡️</div>
+                            <div class="btn-sub">Броня <span class="lvl lvl-green">Ур.<span id="armorLvl">1</span></span></div>
+                            <div class="btn-sub cost">💰 <span id="armorCost">100</span></div>
+                        </button>
+                    </div>
+
+                    <div class="upgrade-subtitle">Планеты</div>
+                    <div style="margin: 8px 0 10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                        <div style="opacity:0.85; font-size: 12px;">Планета:</div>
+                        <select id="upgradePlanetSelect" style="flex:1; min-width: 160px; padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.18); background: rgba(0,0,0,0.35); color: white; outline: none;">
+                            <option value="">(нет планет)</option>
+                        </select>
+                    </div>
+                    <div class="upgrade-grid">
+                        <button id="upgradePlanetAttack" class="ui-btn upgrade-btn" type="button">
+                            <div class="btn-title" style="font-size: 18px;">⚔️</div>
+                            <div class="btn-sub">Атака <span class="lvl lvl-red">Ур.<span id="pAttackLvl">1</span></span></div>
+                            <div class="btn-sub" style="opacity:0.9; font-size: 12px;">+1 атакующий корабль/ур.</div>
+                            <div class="btn-sub cost">💰 <span id="pAttackCost">200</span></div>
+                        </button>
+
+                        <button id="upgradePlanetDefense" class="ui-btn upgrade-btn" type="button">
+                            <div class="btn-title" style="font-size: 18px;">🛡️</div>
+                            <div class="btn-sub">Оборона <span class="lvl lvl-green">Ур.<span id="pDefenseLvl">1</span></span></div>
+                            <div class="btn-sub" style="opacity:0.9; font-size: 12px;">+1 защитник/ур. и +10 HP/ур.</div>
+                            <div class="btn-sub cost">💰 <span id="pDefenseCost">200</span></div>
+                        </button>
+
+                        <button id="upgradePlanetEconomy" class="ui-btn upgrade-btn" type="button">
+                            <div class="btn-title" style="font-size: 18px;">💱</div>
+                            <div class="btn-sub">Экономика <span class="lvl lvl-blue">Ур.<span id="pEconomyLvl">1</span></span></div>
+                            <div class="btn-sub" style="opacity:0.9; font-size: 12px;">доход +1 $/сек/ур.</div>
+                            <div class="btn-sub cost">💰 <span id="pEconomyCost">200</span></div>
+                        </button>
+                    </div>
+
+                    <div class="upgrade-hint">
+                        Верхний ряд — апгрейды флота, нижний — апгрейды планет. Апгрейды планет стоят в 2 раза дороже соответствующих апгрейдов флота. Цена растёт с уровнем. Игра ставится на паузу, пока окно открыто.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Victory Screen -->
+
+        <div id="victoryScreen" class="hidden" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100;">
+            <div style="font-size: 80px; margin-bottom: 20px; animation: pulse 1s infinite;">🏆</div>
+            <div style="font-size: 36px; font-weight: bold; margin-bottom: 10px;" class="glow-text" id="victoryTitle">ПОБЕДА!</div>
+            <div style="font-size: 18px; margin-bottom: 10px; opacity: 0.8;" id="victorySubtitle">Галактика под вашим контролем!</div>
+                        <div id="finalScoreWinWrapper" style="display: none;">💲 <span id="finalScoreWin">0</span> очков</div>
+            <div style="display:flex; gap:10px; margin: 14px 0 8px; flex-wrap:wrap; justify-content:center;">
+                <button id="winTabPlanets" class="menu-btn" style="padding: 8px 14px; font-size: 14px; font-weight: bold; cursor: pointer;">🪐 Планеты</button>
+                <button id="winTabPower" class="menu-btn" style="padding: 8px 14px; font-size: 14px; font-weight: bold; cursor: pointer; opacity: 0.8;">⚔️ Военный потенциал</button>
+            </div>
+            <div id="winStatsPlanets" style="display:block; width:100%; max-width: 520px; text-align:center;">
+                <div style="font-size: 16px; margin: 0 0 6px; opacity: 0.9;">Статистика планет за игру</div>
+                <canvas id="statsCanvasWin" width="480" height="260" style="max-width: 90vw; border-radius: 4px; background: rgba(4,9,18,0.6); border:1px solid rgba(110,190,255,.24);"></canvas>
+            </div>
+            <div id="winStatsPower" style="display:none; width:100%; max-width: 520px; text-align:center;">
+                <div style="font-size: 16px; margin: 0 0 6px; opacity: 0.9;">Военный потенциал (планеты + флот + апгрейды)</div>
+                <canvas id="powerCanvasWin" width="480" height="260" style="max-width: 90vw; border-radius: 4px; background: rgba(4,9,18,0.6); border:1px solid rgba(110,190,255,.24);"></canvas>
+                <div id="powerSummaryWin" style="margin-top: 10px; max-width: 90vw; text-align:left;"></div>
+            </div>
+            <button id="menuBtnWin" class="menu-btn" style="padding: 16px 40px; font-size: 20px; font-weight: bold; cursor: pointer;">🏠 В меню</button>
+        </div>
+        
+        <!-- Game Over Screen -->
+        <div id="gameOverScreen" class="hidden" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100;">
+            <div style="font-size: 80px; margin-bottom: 20px;">💀</div>
+            <div style="font-size: 36px; font-weight: bold; margin-bottom: 10px;" class="glow-text" id="gameOverTitle">ПОРАЖЕНИЕ</div>
+            <div style="font-size: 18px; margin-bottom: 10px; opacity: 0.8;" id="gameOverSubtitle">Ваша империя уничтожена!</div>
+                        <div id="finalScoreLoseWrapper" style="display: none;">💲 <span id="finalScoreLose">0</span> очков</div>
+            <div style="display:flex; gap:10px; margin: 14px 0 8px; flex-wrap:wrap; justify-content:center;">
+                <button id="loseTabPlanets" class="menu-btn" style="padding: 8px 14px; font-size: 14px; font-weight: bold; cursor: pointer;">🪐 Планеты</button>
+                <button id="loseTabPower" class="menu-btn" style="padding: 8px 14px; font-size: 14px; font-weight: bold; cursor: pointer; opacity: 0.8;">⚔️ Военный потенциал</button>
+            </div>
+            <div id="loseStatsPlanets" style="display:block; width:100%; max-width: 520px; text-align:center;">
+                <div style="font-size: 16px; margin: 0 0 6px; opacity: 0.9;">Статистика планет за игру</div>
+                <canvas id="statsCanvasLose" width="480" height="260" style="max-width: 90vw; border-radius: 4px; background: rgba(4,9,18,0.6); border:1px solid rgba(110,190,255,.24);"></canvas>
+            </div>
+            <div id="loseStatsPower" style="display:none; width:100%; max-width: 520px; text-align:center;">
+                <div style="font-size: 16px; margin: 0 0 6px; opacity: 0.9;">Военный потенциал (планеты + флот + апгрейды)</div>
+                <canvas id="powerCanvasLose" width="480" height="260" style="max-width: 90vw; border-radius: 4px; background: rgba(4,9,18,0.6); border:1px solid rgba(110,190,255,.24);"></canvas>
+                <div id="powerSummaryLose" style="margin-top: 10px; max-width: 90vw; text-align:left;"></div>
+            </div>
+            
+            <button id="watchBtnLose" class="menu-btn" style="padding: 12px 30px; font-size: 16px; font-weight: bold; cursor: pointer; margin-bottom: 10px;">👁️ Смотреть до конца</button>
+            <button id="menuBtnLose" class="menu-btn" style="padding: 16px 40px; font-size: 20px; font-weight: bold; cursor: pointer;">🏠 В меню</button>
+        </div>
+        
+        <!-- Start Menu -->
+        <div id="startScreen" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 20px;">
+            <div style="font-size: 50px; margin-bottom: 8px;">🌌</div>
+            <div style="font-size: 24px; font-weight: bold; margin-bottom: 5px;" class="glow-text">Космические Завоевания</div>
+            <div style="font-size: 12px; margin-bottom: 20px;">Захвати галактику!</div>
+            
+            <div class="ui-panel" style="width: 100%; max-width: 300px; padding: 16px; margin-bottom: 15px;">
+                <div class="slider-container" style="margin-bottom: 14px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+                        <span>Противники:</span>
+                        <span id="enemyCountValue" style="color: #ff6161; font-weight: bold;">3</span>
+                    </div>
+                    <input type="range" id="enemyCount" min="1" max="6" value="3">
+                </div>
+
+                <div class="slider-container" style="margin-bottom: 14px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+                        <span>Размер карты:</span>
+                        <span id="mapSizeValue" style="color: #7fd4ff; font-weight: bold;">Средняя</span>
+                    </div>
+                    <input type="range" id="mapSize" min="1" max="3" value="2">
+                </div>
+
+                <div class="slider-container" style="margin-bottom: 14px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+                        <span>Скорость игры:</span>
+                        <span id="gameSpeedValue" style="color: #7fd4ff; font-weight: bold;">×2.5</span>
+                    </div>
+                    <input type="range" id="gameSpeed" min="0.5" max="3" step="0.5" value="2.5">
+                </div>
+
+                <div class="slider-container">
+                    <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+                        <span>Планеты:</span>
+                        <span id="planetCountValue" style="color: #6fe3a5; font-weight: bold;">20</span>
+                    </div>
+                    <input type="range" id="planetCount" min="10" max="50" value="20" step="5">
+                </div>
+
+                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(110,190,255,.2); font-size: 13px; display:flex; align-items:center; justify-content: space-between;">
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                        <input type="checkbox" id="spectatorMode" style="transform: scale(1.1);">
+                        <span>Режим наблюдения</span>
+                    </label>
+                    <span style="font-size: 11px; opacity: 0.7;">ИИ против ИИ</span>
+                </div>
+            </div>
+
+            
+            <div style="font-size: 11px; margin-bottom: 15px; text-align: center; padding: 0 15px; line-height: 1.5;">
+                🏭 Промышленные планеты строят линкоры<br>
+                🏰 Крепости имеют турели<br>
+                💎 Ресурсные дают повышенный доход со временем
+            </div>
+            
+            
+            <div class="ui-panel" style="width: 100%; max-width: 300px; padding: 14px 16px; margin-bottom: 12px;">
+                <div style="font-size: 12px; opacity: 0.85; margin-bottom: 6px;">Модель ИИ (дипломатия)</div>
+                <select id="aiModelSelect" class="menu-select" style="width: 100%;">
+                    <option value="openai">Загрузка списка моделей…</option>
+                </select>
+                <div id="aiModelNote" style="font-size: 10px; color: #9ca3af; margin-top: 6px; line-height: 1.35;">
+                    Выбор фиксируется в меню и не меняется во время игры.
+                </div>
+            </div>
+
+<button id="startBtn" class="menu-btn" style="padding: 14px 40px; font-size: 20px; font-weight: bold; cursor: pointer;">🚀 Начать игру</button>
+        </div>
+        
+        <!-- Diplomacy Panel -->
+        <div id="diplomacyPanel" class="diplo-modal hidden" style="color: white;">
+            <div class="diplo-panel">
+                <div class="diplo-header">
+                    <span style="font-weight: bold; font-size: 16px;">🤝 Дипломатия</span>
+                    <button class="diplo-close" id="closeDiplomacy">✕</button>
+                </div>
+                <div id="diplomacyContent" style="padding: 10px;"></div>
+            </div>
+        </div>
+        
+        <!-- Diplomatic Offer Modal -->
+        <div id="diploOfferModal" class="diplo-modal hidden" style="color: white;">
+            <div class="diplo-panel">
+                <div class="offer-panel">
+                    <div id="offerIcon" style="font-size: 50px; margin-bottom: 10px;">🤝</div>
+                    <div id="offerTitle" class="offer-title">Предложение</div>
+                    <div id="offerText" class="offer-text">Текст предложения</div>
+                    <div class="offer-buttons">
+                        <button id="offerAccept" class="offer-btn offer-accept">✓ Принять</button>
+                        <button id="offerDecline" class="offer-btn offer-decline">✕ Отклонить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonization Modal -->
+        <div id="colonizeModal" class="diplo-modal hidden" style="color: white;">
+            <div class="diplo-panel" style="max-width: 360px;">
+                <div class="diplo-header">
+                    <span style="font-weight: bold; font-size: 16px;">🛰 Колонизация</span>
+                    <button class="diplo-close" id="closeColonize" type="button">✕</button>
+                </div>
+                <div style="padding: 12px;">
+                    <div id="colonizePlanetName" style="font-weight: 800; font-size: 15px; margin-bottom: 6px;"></div>
+                    <div id="colonizeStatusText" style="font-size: 12px; opacity: 0.9; line-height: 1.35; margin-bottom: 10px;"></div>
+                    <button id="colonizeConfirm" class="ui-btn build-btn" type="button" style="width:100%; padding: 10px 8px;">
+                        <div class="btn-title">Колонизировать</div>
+                        <div class="btn-sub" style="color:#fbbf24;">25💲</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diplomacy Inbox Panel -->
+        <div id="diploInboxPanel" class="diplo-modal hidden" style="color: white;">
+            <div class="diplo-panel" style="max-width: 400px;">
+                <div class="diplo-header">
+                    <span style="font-weight: bold; font-size: 16px;">📨 Дипломатическая почта</span>
+                    <button class="diplo-close" id="closeInbox" type="button">✕</button>
+                </div>
+                <div id="inboxContent" style="padding: 0; max-height: 65vh; overflow-y: auto;"></div>
+                <div id="inboxEmpty" style="padding: 20px; text-align: center; opacity: 0.6; font-size: 13px;">
+                    Нет новых сообщений
+                </div>
+            </div>
+        </div>
+
+    </div>
+

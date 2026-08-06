@@ -22,26 +22,26 @@
         }
 
         function spawnParticles(x, y, color, count) {
-            for (let i = 0; i < Math.min(count, 10); i++) {
+            for (let i = 0; i < Math.min(count, 8); i++) {
                 const particle = particlePool.get();
                 const angle = Math.random() * Math.PI * 2;
-                const spd = 0.5 + Math.random() * 2;
+                const spd = 0.8 + Math.random() * 3;
 
                 particle.x = x;
                 particle.y = y;
                 particle.vx = Math.cos(angle) * spd;
                 particle.vy = Math.sin(angle) * spd;
-                particle.life = 20 + Math.random() * 15;
-                particle.maxLife = 35;
+                particle.life = 15 + Math.random() * 10;
+                particle.maxLife = 25;
                 particle.color = color;
-                particle.size = 1 + Math.random() * 2;
+                particle.size = 1.5 + Math.random() * 2.5;
                 particle.active = true;
                 G.particles.push(particle);
             }
         }
 
         function spawnExplosion(x, y, color, size) {
-            G.explosions.push({ x, y, radius: 5, maxRadius: Math.min(size, 30), color, life: 1 });
-            spawnParticles(x, y, color, Math.min(size, 6));
+            G.explosions.push({ x, y, radius: 5, maxRadius: Math.min(size, 35), color, life: 1 });
+            spawnParticles(x, y, color, Math.min(Math.floor(size / 2), 5));
         }
 

@@ -1,34 +1,11 @@
 // ============================================================
 // MODULE: 03-render-cache.js
-// Назначение: Кэши рендера: спрайты свечения, звёздный фон, тела планет
+// Назначение: Кэши рендера: звёздный фон, тела планет (без свечения для производительности)
 // Оригинальные строки IIFE: 1762-1918
 // Порядок загрузки: 4/24
 // ============================================================
 
-        const _glowSpriteCache = new Map();
-        function getGlowSprite(radius, color) {
-            const key = `${radius}_${color}`;
-            let sprite = _glowSpriteCache.get(key);
-            if (sprite) return sprite;
-            const size = Math.ceil(radius * 2) + 2;
-            const c = document.createElement('canvas');
-            c.width = size; c.height = size;
-            const cx = c.getContext('2d');
-            const half = size / 2;
-            const g = cx.createRadialGradient(half, half, 0, half, half, radius);
-            g.addColorStop(0, color);
-            g.addColorStop(1, 'transparent');
-            cx.fillStyle = g;
-            cx.beginPath();
-            cx.arc(half, half, radius, 0, Math.PI * 2);
-            cx.fill();
-            _glowSpriteCache.set(key, c);
-            return c;
-        }
-        function drawGlowSprite(targetCtx, x, y, radius, color) {
-            const sprite = getGlowSprite(radius, color);
-            targetCtx.drawImage(sprite, x - sprite.width / 2, y - sprite.height / 2);
-        }
+        // Glow sprite cache removed for performance - no glow effects used
 
         // === STAR BACKGROUND CACHE (pre-rendered) ===
         let _starCanvas = null;

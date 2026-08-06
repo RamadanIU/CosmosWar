@@ -892,13 +892,38 @@
                 }
             }
 
+            // Render explosions with gradient core and particle ring
             for (let ei = 0; ei < G.explosions.length; ei++) {
                 const e = G.explosions[ei];
                 if (e.x < camX - e.radius || e.x > camX + vw + e.radius || e.y < camY - e.radius || e.y > camY + vh + e.radius) continue;
-                ctx.globalAlpha = e.life;
-                ctx.fillStyle = '#fff';
+                
+                const progress = 1 - e.life;
+                const innerRadius = e.radius * 0.4;
+                
+                // Outer ring - colored edge
+                ctx.globalAlpha = e.life * 0.8;
+                ctx.strokeStyle = e.color || 'rgba(255,200,100,0.6)';
+                ctx.lineWidth = Math.max(1, e.radius * 0.15);
                 ctx.beginPath();
                 ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                // Middle fade zone
+                ctx.globalAlpha = e.life * 0.5;
+                const midGradient = ctx.createRadialGradient(e.x, e.y, innerRadius, e.x, e.y, e.radius * 0.7);
+                midGradient.addColorStop(0, 'rgba(255,255,255,0)');
+                midGradient.addColorStop(0.5, 'rgba(255,255,255,0.3)');
+                midGradient.addColorStop(1, 'rgba(255,255,255,0)');
+                ctx.fillStyle = midGradient;
+                ctx.beginPath();
+                ctx.arc(e.x, e.y, e.radius * 0.7, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Bright core
+                ctx.globalAlpha = e.life * 0.9;
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(e.x, e.y, innerRadius, 0, Math.PI * 2);
                 ctx.fill();
             }
             ctx.globalAlpha = 1;
